@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const mongoURI = "mongodb://localhost:27017/jobmatcher";
-// mongoose.connect('mongodb://127.0.0.1:27017/JobMatcher', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// });
-
-
 
 const connectToMongo = async () => {
     try {
