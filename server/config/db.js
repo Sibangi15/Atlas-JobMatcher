@@ -1,14 +1,12 @@
-const mongoose = require('mongoose');
-
-const mongoURI = "mongodb://localhost:27017/jobmatcher";
+const mongoose = require("mongoose");
 
 const connectToMongo = async () => {
     try {
-        await mongoose.connect(mongoURI);
-
-        console.log("Connected to MongoDB successfully");
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB connected successfully");
     } catch (error) {
-        console.error("MongoDB connection error:", error);
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
     }
 };
 
