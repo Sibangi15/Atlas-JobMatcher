@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import Login from './pages/Login'
 import './App.css'
+import Register from './pages/Register';
+import Home from './pages/Home';
 
 function App() {
   const [alert, setAlert] = useState(null);
@@ -20,10 +22,13 @@ function App() {
   }
 
   return (
+
     <>
       <Router>
         <Routes>
+          <Route path='/' element={<Home />} />
           <Route path="/login" element={<Login showAlert={showAlert} />} />
+          <Route path="/register" element={<Register showAlert={showAlert} />} />
         </Routes>
       </Router>
     </>

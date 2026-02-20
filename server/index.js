@@ -1,7 +1,17 @@
-require('dotenv').config();
+import dotenv from "dotenv";
+dotenv.config();
 
-const connectToMongo = require('./config/db');
+import express from "express";
+import cookieParser from "cookie-parser";
+
+import connectToMongo from "./config/db.js";
+import authRoutes from "./routes/auth.js";
+import resumeRoutes from "./routes/resume.js";
+
 connectToMongo();
+
+const app = express();
+const port = 3000;
 
 // var cors = require('cors')
 
@@ -9,17 +19,13 @@ connectToMongo();
 
 // app.use('/api/notes', require('./routes/notes'))
 
-
-const express = require('express')
-const app = express()
-const port = 3000
-
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+app.use(express.json());
 
-app.use(express.json())
-app.use('/api/auth', require('./routes/auth'))
+app.use("/api/auth", authRoutes);
+app.use("/api/resume", resumeRoutes);
+app.use("/uploads", express.static("uploads"));
 
 app.listen(port, () => {
-    console.log(`JobMatcher listening on port ${port}`)
-})
+    console.log(`JobMatcher listening on port ${port}`);
+});

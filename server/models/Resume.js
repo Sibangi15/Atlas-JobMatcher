@@ -1,28 +1,29 @@
-//const { type } = require('@testing-library/user-event/dist/type');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-const NotesSchema = new Schema({
+const ResumeSchema = new Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        required: true,
     },
-    title: {
+    filename: {
         type: String,
-        required: true
+        required: true,
     },
-    description: {
+    filepath: {
         type: String,
-        required: true
+        required: true,
     },
-    tag: {
+    filetype: {
         type: String,
-        default: 'General'
+        enum: ["pdf", "docx"],
+        required: true,
     },
-    date: {
+    uploadedAt: {
         type: Date,
-        default: Date.now
+        default: Date.now,
     },
 });
 
-module.exports = mongoose.model('notes', NotesSchema);
+export default mongoose.model('resume', ResumeSchema);

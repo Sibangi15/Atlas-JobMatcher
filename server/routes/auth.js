@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { body } = require('express-validator');
-const { registerUser, loginUser, getUser } = require('../controllers/auth')
-const fetchuser = require('../middleware/fetchuser');
+import { body } from 'express-validator';
+import { registerUser, loginUser, getUser } from '../controllers/auth.js'
+import fetchuser from '../middleware/fetchuser.js';
 
 //ROUTE 1: create user with post method
 router.post('/register', [
@@ -24,4 +24,4 @@ router.post('/login', [
 // ROUTE 3: Get logged-in user details
 router.post('/getuser', fetchuser, getUser);
 
-module.exports = router
+export default router

@@ -1,11 +1,11 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
+import User from "../models/User.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-const registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -40,7 +40,7 @@ const registerUser = async (req, res) => {
     }
 }
 
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
 
     let success = false;
     const errors = validationResult(req);
@@ -77,7 +77,7 @@ const loginUser = async (req, res) => {
     }
 }
 
-const getUser = async (req, res) => {
+export const getUser = async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findById(userId).select('-password');
@@ -87,5 +87,3 @@ const getUser = async (req, res) => {
         res.status(500).send("Internal server error");
     }
 }
-
-module.exports = { registerUser, loginUser, getUser }
