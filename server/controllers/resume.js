@@ -1,57 +1,71 @@
-import { validationResult } from 'express-validator';
 import Resume from '../models/Resume.js';
-import User from '../models/User.js';
-
-// import { createRequire } from "module";
-// const require = createRequire(import.meta.url);
-// const pdfParse = require("pdf-parse");
-import * as pdfParse from "pdf-parse";
-
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import fs from "fs";
+import { basicParse } from "../services/resumeParser.js";
 
 export const uploadResume = async (req, res) => {
-    let success = false;
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-    //check if the email already exists
     try {
+        console.log("UPLOAD CONTROLLER HIT");
+
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });
         }
-        //Read PDF file
-        const dataBuffer = fs.readFileSync(req.file.path);
 
-        //Extract text
-        const extractedText = async (buffer) => {
-            const pdfData = await pdfParse.default(buffer);
-            return pdfData.text;
-        };
-        // const pdfData = await pdfParse(dataBuffer);
-        // const extractedText = pdfData.text;
+        console.log("User from token:", req.user);
 
-        //Save resume in db
+        const dataBuffer = new Uint8Array(
+            fs.readFileSync(req.file.path)
+        );
+
+        const pdf = await pdfjsLib.getDocument({ data: dataBuffer }).promise;
+
+        let extractedText = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            const strings = content.items.map(item => item.str);
+            extractedText += strings.join(" ") + "\n";
+        }
+
+        const parsedData = basicParse(extractedText);
+
+        console.log("Parsed Data:", parsedData);
+
         const resume = await Resume.create({
             user: req.user.id,
             filename: req.file.filename,
             filepath: req.file.path,
-            filetype: req.file.mimetype.includes("pdf") ? "pdf" : "docx",
-            text: extractedText,
+            filetype: "pdf",
+            parsedData: parsedData
         });
-        await User.findByIdAndUpdate(req.user.id, {
-            resume: resume._id,
-        });
-        //const authtoken = jwt.sign(data, JWT_SECRET);
-        //res.json({ success, authtoken })
-        res.status(201).json({
-            success: true,
-            message: "Resume uploaded successfully",
-            resume,
+
+        console.log("Saved Resume:", resume);
+
+        res.status(200).json({
+            message: "Saved successfully",
+            resume
         });
 
     } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Internal server error");
+        console.error("FULL ERROR:", error);
+        res.status(500).json({
+            message: "Error parsing resume",
+            error: error.message
+        });
     }
-}
+};
+
+export const getResume = async (req, res) => {
+    try {
+        const resume = await Resume.findOne({ user: req.user.id });
+
+        if (!resume) {
+            return res.status(404).json({ message: "No resume found" });
+        }
+
+        res.json(resume);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching resume" });
+    }
+};

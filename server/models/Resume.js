@@ -20,10 +20,19 @@ const ResumeSchema = new Schema({
         enum: ["pdf", "docx"],
         required: true,
     },
+    parsedData: {
+        name: String,
+        email: String,
+        phone: String,
+        skills: [String],
+        education: [String],
+        experience: [String],
+        summary: String,
+    },
     uploadedAt: {
         type: Date,
         default: Date.now,
     },
 });
 
-export default mongoose.model('resume', ResumeSchema);
+export default mongoose.model('Resume', ResumeSchema);
