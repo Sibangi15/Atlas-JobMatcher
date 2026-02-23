@@ -3,9 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
 export const registerUser = async (req, res) => {
+    const JWT_SECRET = process.env.JWT_SECRET;
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -17,7 +16,7 @@ export const registerUser = async (req, res) => {
         if (user) { return res.status(400).json({ error: "Sorry an user with this email already exists" }) }
 
         const salt = await bcrypt.genSalt(10);
-        secPass = await bcrypt.hash(req.body.password, salt);
+        let secPass = await bcrypt.hash(req.body.password, salt);
 
         user = await User.create({
             name: req.body.name,
@@ -36,12 +35,13 @@ export const registerUser = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
+        console.log(error);
         res.status(500).send("Internal server error");
     }
 }
 
 export const loginUser = async (req, res) => {
-
+    const JWT_SECRET = process.env.JWT_SECRET;
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

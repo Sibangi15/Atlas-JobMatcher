@@ -7,6 +7,8 @@ import cookieParser from "cookie-parser";
 import connectToMongo from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import resumeRoutes from "./routes/resume.js";
+import jobRoutes from "./routes/job.js";
+import "./cron/jobCron.js";
 
 connectToMongo();
 
@@ -17,13 +19,12 @@ const port = 3000;
 
 // app.use(cors())
 
-// app.use('/api/notes', require('./routes/notes'))
-
 app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
+app.use("/api/job", jobRoutes);
 app.use("/uploads", express.static("uploads"));
 
 app.listen(port, () => {
