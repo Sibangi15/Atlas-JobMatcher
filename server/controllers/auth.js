@@ -68,7 +68,7 @@ export const loginUser = async (req, res) => {
             sameSite: 'strict',     // prevents CSRF
             maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
         });
-        res.json({ success, message: "Login successful" });
+        res.json({ success, authtoken, message: "Login successful" });
 
 
     } catch (error) {

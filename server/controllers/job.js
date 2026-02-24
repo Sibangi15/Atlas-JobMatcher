@@ -6,7 +6,6 @@ export const addJob = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    //check if the email already exists
     try {
         const job = await Job.create({
             user: req.user.id,

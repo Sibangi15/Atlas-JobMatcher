@@ -5,14 +5,9 @@ import { basicParse } from "../services/resumeParser.js";
 
 export const uploadResume = async (req, res) => {
     try {
-        console.log("UPLOAD CONTROLLER HIT");
-
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });
         }
-
-        console.log("User from token:", req.user);
-
         const dataBuffer = new Uint8Array(
             fs.readFileSync(req.file.path)
         );
@@ -30,8 +25,6 @@ export const uploadResume = async (req, res) => {
 
         const parsedData = basicParse(extractedText);
 
-        console.log("Parsed Data:", parsedData);
-
         const resume = await Resume.create({
             user: req.user.id,
             filename: req.file.filename,
@@ -39,8 +32,6 @@ export const uploadResume = async (req, res) => {
             filetype: "pdf",
             parsedData: parsedData
         });
-
-        console.log("Saved Resume:", resume);
 
         res.status(200).json({
             message: "Saved successfully",
@@ -59,11 +50,9 @@ export const uploadResume = async (req, res) => {
 export const getResume = async (req, res) => {
     try {
         const resume = await Resume.findOne({ user: req.user.id });
-
         if (!resume) {
             return res.status(404).json({ message: "No resume found" });
         }
-
         res.json(resume);
     } catch (error) {
         res.status(500).json({ message: "Error fetching resume" });

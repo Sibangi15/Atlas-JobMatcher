@@ -1,0 +1,23 @@
+export const SKILL_KEYWORDS = [
+    "JavaScript",
+    "React",
+    "Node.js",
+    "MongoDB",
+    "Express",
+    "Python",
+    "Django",
+    "SQL",
+    "MySQL",
+    "PostgreSQL",
+    "Docker",
+    "AWS",
+    "API",
+    "REST",
+    "GraphQL",
+    "HTML",
+    "CSS",
+    "TypeScript",
+    "n8n",
+    "AI",
+    "Automation"
+];

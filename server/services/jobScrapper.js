@@ -1,36 +1,46 @@
 import axios from "axios";
 import Job from "../models/Job.js";
 import striptags from "striptags";
+import { SKILL_KEYWORDS } from "../utils/skillList.js";
+
+function extractSkills(description) {
+    const foundSkills = [];
+    for (const skill of SKILL_KEYWORDS) {
+        const regex = new RegExp(`\\b${skill}\\b`, "i");
+        if (regex.test(description)) {
+            foundSkills.push(skill);
+        }
+    }
+    return foundSkills;
+}
 
 export const fetchJobsFromAPI = async () => {
-    const options = {
-        method: "GET",
-        url: "https://www.arbeitnow.com/api/job-board-api",
-        params: { query: "developer jobs in India", page: "1" },
-        headers: {
-            //  "X-RapidAPI-Key": process.env.RAPID_API_KEY,
-            'Content-Type': 'application/json'
-        },
-    };
-
-    const response = await axios.request(options);
-
-    const jobs = response.data.data;
-
-    for (const job of jobs) {
-        await Job.updateOne(
-            { title: job.job_title, company: job.employer_name },
+    try {
+        const response = await axios.get(
+            "https://remotive.com/api/remote-jobs",
             {
-                title: job.title,
-                description: striptags(job.description),
-                company: job.company_name,
-                skills: job.tags || [],
-                location: job.location,
-                source: "Arbeitnow",
-            },
-            { upsert: true }
+                params: { search: "developer" }
+            }
         );
-    }
 
-    console.log("API jobs fetched");
+        const jobs = response.data.jobs;
+
+        for (const job of jobs) {
+            const skills = extractSkills(job.description);
+            await Job.updateOne(
+                { title: job.title, company: job.company_name },
+                {
+                    title: job.title,
+                    description: striptags(job.description),
+                    company: job.company_name,
+                    skills: skills.length ? skills : job.tags,
+                    location: job.candidate_required_location || "Remote",
+                    source: "Remotive",
+                },
+                { upsert: true }
+            );
+        }
+    } catch (error) {
+        console.error("ERROR:", error.response?.data || error.message);
+    }
 };
