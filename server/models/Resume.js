@@ -33,6 +33,22 @@ const ResumeSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-});
+    suggestions: {
+        missingSkills: [String],
+        industryKeywords: [String],
+        atsImprovements: [String],
+    },
+    matchAnalysis: {
+        jobDescription: String,
+        score: Number,
+        missingSkills: [String],
+        improvementSuggestions: [String],
+        atsIssues: [String],
+        analyzedAt: Date,
+    },
+    aiLastUpdated: {
+        type: Date,
+    },
+}, { timestamps: true });
 
 export default mongoose.model('Resume', ResumeSchema);

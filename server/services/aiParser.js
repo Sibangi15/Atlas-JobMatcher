@@ -1,24 +1,48 @@
-import OpenAI from "openai";
+// import { GoogleGenAI } from "@google/genai";
 
-export const aiParseResume = async (text) => {
-    const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-    });
+// export const generateAIResponse = async (prompt) => {
+//     try {
+//         if (!process.env.GEMINI_API_KEY) {
+//             throw new Error("GEMINI_API_KEY missing");
+//         }
 
-    const prompt = `
-Extract structured JSON from this resume:
+//         const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
-Return ONLY valid JSON with:
-name, email, phone, skills (array), education (array), experience (array), summary.
+//         const model = genAI.getGenerativeModel({
+//             model: "gemini-1.5-flash-latest",
+//         });
 
-Resume:
-${text}
-`;
+//         const result = await model.generateContent({
+//             contents: [{ role: "user", parts: [{ text: prompt }] }],
+//             generationConfig: {
+//                 temperature: 0.3,
+//                 maxOutputTokens: 800,
+//             },
+//         });
 
-    const response = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-    });
+//         return result.response.text();
+//     } catch (error) {
+//         console.error("Gemini Error:", error.message);
+//         throw error;
+//     }
+// };
 
-    return JSON.parse(response.choices[0].message.content);
+import { GoogleGenAI } from "@google/genai";
+
+export const generateAIResponse = async (prompt) => {
+    try {
+        const ai = new GoogleGenAI({
+            apiKey: process.env.GEMINI_API_KEY,
+        });
+
+        const response = await ai.models.generateContent({
+            model: "gemini-3-flash-preview",
+            contents: prompt,
+        });
+
+        return response.text;
+    } catch (error) {
+        console.error("Gemini Error:", error);
+        throw error;
+    }
 };

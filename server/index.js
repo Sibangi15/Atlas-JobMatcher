@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.js";
 import resumeRoutes from "./routes/resume.js";
 import jobRoutes from "./routes/job.js";
 import "./cron/jobCron.js";
+import aiRoutes from "./routes/ai.js";
 
 connectToMongo();
 
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/job", jobRoutes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/ai", aiRoutes);
 
 app.listen(port, () => {
     console.log(`JobMatcher listening on port ${port}`);
