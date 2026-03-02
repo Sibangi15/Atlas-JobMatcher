@@ -49,6 +49,25 @@ const ResumeSchema = new Schema({
     aiLastUpdated: {
         type: Date,
     },
+    resumeEmbedding: {
+        type: [Number],
+    },
+    jobEmbedding: {
+        type: [Number],
+    },
+    similarityScore: {
+        type: Number,
+    },
+    finalHybridScore: {
+        type: Number,
+    },
+    hybridBreakdown: {
+        geminiScore: Number,
+        embeddingScore: Number,
+        weightEmbedding: Number,
+        weightGemini: Number,
+        calculatedAt: Date,
+    },
 }, { timestamps: true });
 
 export default mongoose.model('Resume', ResumeSchema);

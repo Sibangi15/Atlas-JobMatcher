@@ -16,10 +16,6 @@ connectToMongo();
 const app = express();
 const port = 3000;
 
-// var cors = require('cors')
-
-// app.use(cors())
-
 app.use(cookieParser());
 app.use(express.json());
 
