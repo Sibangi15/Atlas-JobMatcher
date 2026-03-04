@@ -5,6 +5,7 @@ import { validationResult } from "express-validator";
 
 export const registerUser = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
+    console.log(JWT_SECRET);
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -31,7 +32,10 @@ export const registerUser = async (req, res) => {
         }
         const authtoken = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.json({ success, authtoken })
+        res.json({
+            success: true,
+            token: authtoken
+        });
 
     } catch (error) {
         console.error(error.message);
@@ -42,6 +46,7 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
+    console.log(JWT_SECRET);
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -68,7 +73,7 @@ export const loginUser = async (req, res) => {
             sameSite: 'strict',     // prevents CSRF
             maxAge: 24 * 60 * 60 * 1000 // 1 day in milliseconds
         });
-        res.json({ success, authtoken, message: "Login successful" });
+        res.json({ success: true, token: authtoken, message: "Login successful" });
 
 
     } catch (error) {

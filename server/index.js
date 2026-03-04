@@ -19,6 +19,13 @@ const port = 3000;
 app.use(cookieParser());
 app.use(express.json());
 
+import cors from "cors";
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/job", jobRoutes);
