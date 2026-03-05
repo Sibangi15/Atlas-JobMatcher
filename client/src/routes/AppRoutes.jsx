@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
+import DashboardLayout from "../components/layouts/DashboardLayout";
+import UploadResume from "../pages/UploadResume";
+import ResumeScore from "../pages/ResumeScore";
 import ProtectedRoute from "./ProtectedRoute";
 
 // import Jobs from "../pages/Jobs";
@@ -10,9 +13,6 @@ import ProtectedRoute from "./ProtectedRoute";
 // const AppRoutes = () => {
 //     return (
 //         <Routes>
-//             <Route path="/" element={<Login />} />
-//             <Route path="/register" element={<Register />} />
-//             <Route path="/dashboard" element={<Dashboard />} />
 //             <Route path="/jobs" element={<Jobs />} />
 //             <Route path="/match/:jobId" element={<MatchResult />} />
 //         </Routes>
@@ -25,14 +25,14 @@ const AppRoutes = () => {
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            <Route
-                path="/dashboard"
-                element={
-                    <ProtectedRoute>
-                        <Dashboard />
-                    </ProtectedRoute>
-                }
-            />
+            <Route element={<ProtectedRoute />}>
+                <Route element={<DashboardLayout />}>
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/upload" element={<UploadResume />} />
+                    <Route path="/score" element={<ResumeScore />} />
+                </Route>
+            </Route>
+
         </Routes>
     );
 };

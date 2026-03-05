@@ -5,7 +5,6 @@ import { validationResult } from "express-validator";
 
 export const registerUser = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
-    console.log(JWT_SECRET);
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -46,7 +45,6 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     const JWT_SECRET = process.env.JWT_SECRET;
-    console.log(JWT_SECRET);
     let success = false;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

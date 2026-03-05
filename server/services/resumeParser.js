@@ -12,6 +12,13 @@ export const basicParse = (text) => {
         summary: null
     };
 
+    //NAME
+    const nameMatch = text.match(
+        /^[A-Z][a-z]+(?:\s[A-Z]\.)?(?:\s[A-Z][a-z]+)+/m
+    );
+
+    if (nameMatch) result.name = nameMatch[0].trim();
+
     // EMAIL
     const emailMatch = text.match(
         /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i
