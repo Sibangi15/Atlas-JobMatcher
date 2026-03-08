@@ -1,9 +1,8 @@
 import express from 'express';
 const router = express.Router();
 import { body } from 'express-validator';
-import { addJob } from '../controllers/job.js'
+import { addJob, scrapeTest, getJobs } from '../controllers/job.js'
 import fetchuser from '../middleware/fetchuser.js';
-import { fetchJobsFromAPI } from '../services/jobScrapper.js';
 import { matchResumeWithJob } from '../controllers/match.js';
 import { protect } from '../middleware/fetchuser.js';
 import { matchResumeWithAllJobs } from '../controllers/matchAll.js';
@@ -19,11 +18,8 @@ router.post('/add', fetchuser, [
     addJob
 )
 
-router.get("/scrape-test", async (req, res) => {
-    await fetchJobsFromAPI();
-    res.json({ message: "Scraping done" });
-});
-
+router.get("/scrape-test", scrapeTest);
+router.get("/", getJobs);
 router.get("/match/:jobId", protect, matchResumeWithJob);
 router.get("/match-all", protect, matchResumeWithAllJobs);
 

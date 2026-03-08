@@ -11,7 +11,7 @@ import { hybridMatch } from '../controllers/hybridScrore.js';
 router.post('/upload', fetchuser, upload.single("resume"), uploadResume);
 router.get('/getresume', fetchuser, getResume);
 router.post("/suggest-keywords/:id", suggestKeywords);
-router.post("/match/:id", matchResumeWithJobDesc);
+router.post("/gemini-match/:id", matchResumeWithJobDesc);
 router.post("/embedding-match/:id", embeddingMatch);
 router.post("/hybrid-score/:id", hybridMatch);
 

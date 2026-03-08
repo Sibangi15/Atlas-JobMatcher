@@ -1,44 +1,70 @@
 const SuggestionCard = ({ suggestions }) => {
     if (!suggestions) return null;
-
     return (
-        <div className="bg-white p-8 rounded-2xl shadow">
-            <h2 className="text-lg font-semibold mb-6">
-                Improvement Suggestions
+        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-8">
+
+            <h2 className="text-xl font-semibold text-gray-800 mb-8">
+                Resume Improvement Suggestions
             </h2>
 
-            <div className="mb-4">
-                <h3 className="font-semibold text-red-600">
-                    Missing Skills
-                </h3>
-                <ul className="list-disc list-inside text-gray-700">
-                    {suggestions.missingSkills?.map((skill, i) => (
-                        <li key={i}>{skill}</li>
-                    ))}
-                </ul>
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+
+                {/* Missing Skills */}
+                <div className="border border-red-100 bg-red-50/40 rounded-xl p-5">
+                    <h3 className="font-semibold text-red-600 mb-4">
+                        Missing Skills
+                    </h3>
+
+                    <div className="flex flex-wrap gap-2">
+                        {suggestions.missingSkills?.map((skill, i) => (
+                            <span
+                                key={i}
+                                className="bg-white text-red-700 border border-red-200 
+              px-3 py-1 rounded-full text-sm"
+                            >
+                                {skill}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Industry Keywords */}
+                <div className="border border-blue-100 bg-blue-50/40 rounded-xl p-5">
+                    <h3 className="font-semibold text-blue-600 mb-4">
+                        Industry Keywords
+                    </h3>
+
+                    <div className="flex flex-wrap gap-2">
+                        {suggestions.industryKeywords?.map((kw, i) => (
+                            <span
+                                key={i}
+                                className="bg-white text-blue-700 border border-blue-200 
+              px-3 py-1 rounded-full text-sm"
+                            >
+                                {kw}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
             </div>
 
-            <div className="mb-4">
-                <h3 className="font-semibold text-blue-600">
-                    Industry Keywords
+            {/* ATS Improvements */}
+            <div className="border border-green-100 bg-green-50/40 rounded-xl p-5">
+                <h3 className="font-semibold text-green-600 mb-4">
+                    ATS Optimization Tips
                 </h3>
-                <ul className="list-disc list-inside text-gray-700">
-                    {suggestions.industryKeywords?.map((kw, i) => (
-                        <li key={i}>{kw}</li>
-                    ))}
-                </ul>
-            </div>
 
-            <div>
-                <h3 className="font-semibold text-green-600">
-                    ATS Improvements
-                </h3>
-                <ul className="list-disc list-inside text-gray-700">
+                <ul className="space-y-3 text-gray-700">
                     {suggestions.atsImprovements?.map((tip, i) => (
-                        <li key={i}>{tip}</li>
+                        <li key={i} className="flex gap-3 items-start">
+                            <span className="text-green-500 font-bold">✓</span>
+                            <span>{tip}</span>
+                        </li>
                     ))}
                 </ul>
             </div>
+
         </div>
     );
 };

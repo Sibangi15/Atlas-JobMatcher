@@ -65,7 +65,7 @@ const Sidebar = ({
                         Jobs
                     </SidebarLink>
 
-                    <SidebarLink to="/resume" icon={<FileText size={18} />} collapsed={collapsed}>
+                    <SidebarLink to="/score" icon={<FileText size={18} />} collapsed={collapsed}>
                         My Resume
                     </SidebarLink>
 

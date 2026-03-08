@@ -31,6 +31,10 @@ const JobSchema = new Schema({
         type: String,
         required: true,
     },
+    sourceId: {
+        type: String,
+        unique: true
+    },
     uploadedAt: {
         type: Date,
         default: Date.now,

@@ -29,7 +29,7 @@ const UploadResume = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
+            localStorage.setItem("resumeId", res.data.resume._id);
             setParsedData(res.data.resume.parsedData);
         } catch (error) {
             console.error(error);
@@ -39,11 +39,11 @@ const UploadResume = () => {
         }
     };
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 flex flex-col items-center px-6 py-12">
+        <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200 flex flex-col items-center px-6 py-12">
 
             <div className="w-full max-w-2xl">
 
-                <h1 className="text-4xl font-semibold text-gray-800 text-center mb-2">
+                <h1 className="text-4xl font-semibold bg-linear-to-r from-orange-600 to-pink-400 bg-clip-text text-transparent">
                     Upload Your Resume
                 </h1>
                 <p className="text-gray-500 text-center mb-10">
