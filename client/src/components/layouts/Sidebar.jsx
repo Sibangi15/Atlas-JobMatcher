@@ -22,27 +22,28 @@ const Sidebar = ({
                     onClick={() => setMobileOpen(false)}
                 />
             )}
-
             <aside
                 className={`
-          fixed md:static z-50
-          bg-white border-r border-gray-200
-          h-screen transition-all duration-300
-          ${collapsed ? "w-20" : "w-64"}
-          ${mobileOpen ? "left-0" : "-left-full"}
-          md:left-0
-        `}
+    fixed md:sticky top-0
+    bg-linear-to-b from-blue-400 via-blue-200 to-purple-100
+    border-r border-indigo-100
+    min-h-screen
+    transition-all duration-300
+    ${collapsed ? "w-20" : "w-64"}
+    ${mobileOpen ? "left-0" : "-left-full"}
+    md:left-0
+  `}
             >
                 <div className="flex items-center justify-between p-6">
                     {!collapsed && (
-                        <h1 className="text-xl font-bold tracking-wide text-gray-800">
+                        <h1 className="text-2xl font-bold tracking-wide bg-linear-to-r from-yellow-200 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
                             Atlas
                         </h1>
                     )}
 
                     <button
                         onClick={() => setCollapsed(!collapsed)}
-                        className="hidden md:block text-gray-500 hover:text-black"
+                        className="hidden md:block text-amber-900 hover:text-white"
                     >
                         <ChevronLeft
                             className={`transition-transform ${collapsed ? "rotate-180" : ""
@@ -79,11 +80,10 @@ const SidebarLink = ({ to, icon, children, collapsed }) => (
     <NavLink
         to={to}
         className={({ isActive }) =>
-            `flex items-center gap-3 p-3 rounded-xl transition-all
-      ${isActive
-                ? "bg-black text-white shadow-md"
-                : "text-gray-600 hover:bg-gray-100"
-            }`
+            `flex items-center gap-3 p-3 rounded-xl transition-all text-amber-900 
+      $${isActive
+                ? "bg-linear-to-r from-purple-600 to-indigo-600 text-white shadow-md"
+                : "text-gray-600 hover:bg-purple-50 hover:text-yellow-400"}`
         }
     >
         {icon}

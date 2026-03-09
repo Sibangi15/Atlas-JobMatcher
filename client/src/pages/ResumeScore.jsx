@@ -77,8 +77,7 @@ const ResumeScore = () => {
                 <div className="flex justify-end mt-4">
                     <button
                         onClick={analyzeResume}
-                        className="bg-black text-white px-6 py-2.5 rounded-xl 
-          hover:bg-gray-800 transition shadow-sm"
+                        className="bg-linear-to-r from-emerald-600 to-cyan-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
                     >
                         {loading ? "Analyzing..." : "Analyze Resume"}
                     </button>

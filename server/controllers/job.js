@@ -43,7 +43,6 @@ export const scrapeTest = async (req, res) => {
     }
 };
 
-
 export const getJobs = async (req, res) => {
     try {
         const { location } = req.query;

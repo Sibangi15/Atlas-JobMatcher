@@ -1,39 +1,4 @@
-// const JobCard = ({ job, score }) => {
-
-//     return (
-
-//         <div className="bg-white shadow rounded-xl p-5 flex flex-col justify-between">
-
-//             <div>
-
-//                 <h2 className="text-lg font-semibold">
-//                     {job.title}
-//                 </h2>
-
-//                 <p className="text-gray-500 text-sm">
-//                     {job.company}
-//                 </p>
-
-//                 <p className="text-gray-400 text-sm">
-//                     {job.location}
-//                 </p>
-
-//             </div>
-
-//             {score !== undefined && (
-//                 <div className="mt-3 bg-green-100 text-green-700 px-3 py-1 rounded w-fit">
-//                     {score.toFixed(1)}% Match
-//                 </div>
-//             )}
-
-
-//         </div>
-
-//     );
-// };
-
-// export default JobCard;
-
+import { Link } from "react-router-dom";
 const JobCard = ({ job, score }) => {
 
     return (
@@ -42,15 +7,17 @@ const JobCard = ({ job, score }) => {
 
             <div>
 
-                <h2 className="text-lg font-semibold text-gray-800 mb-1">
-                    {job.title}
-                </h2>
+                <Link to={`/jobs/${job._id}`}>
+                    <h2 className="text-lg font-semibold text-gray-800 mb-1">
+                        {job.title}
+                    </h2>
+                </Link>
 
                 <p className="text-gray-600 text-sm">
                     {job.company}
                 </p>
 
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-amber-950 text-sm mt-1">
                     {job.location}
                 </p>
 

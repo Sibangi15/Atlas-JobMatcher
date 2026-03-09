@@ -47,7 +47,7 @@ const UploadResume = () => {
                     Upload Your Resume
                 </h1>
                 <p className="text-gray-500 text-center mb-10">
-                    Let Atlas intelligently analyze your profile.
+                    Let Atlas analyze your profile.
                 </p>
 
                 {/* Drag & Drop Box */}
@@ -79,10 +79,10 @@ const UploadResume = () => {
                 {/* Upload Button */}
                 <button
                     onClick={handleUpload}
-                    className="mt-8 w-full bg-black text-white py-3 rounded-xl 
+                    className="mt-8 w-full bg-linear-to-r from-orange-500 to-pink-500 text-white py-3 rounded-xl 
                    font-medium tracking-wide
                    hover:bg-gray-800 hover:shadow-lg 
-                   transition-all duration-300"
+                   transition-all duration-300 cursor-pointer"
                 >
                     {loading ? "Analyzing Resume..." : "Upload & Analyze"}
                 </button>

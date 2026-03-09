@@ -27,7 +27,8 @@ export const fetchJobsFromAPI = async () => {
             "full stack",
             "node",
             "react",
-            "javascript"
+            "javascript",
+            "web"
         ];
 
         let totalFetched = 0;

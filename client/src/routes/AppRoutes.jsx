@@ -7,8 +7,7 @@ import UploadResume from "../pages/UploadResume";
 import ResumeScore from "../pages/ResumeScore";
 import ProtectedRoute from "./ProtectedRoute";
 import Jobs from "../pages/Jobs";
-// import MatchResult from "../pages/MatchResult";
-
+import JobDetail from "../pages/JobDetails";
 
 const AppRoutes = () => {
     return (
@@ -22,6 +21,7 @@ const AppRoutes = () => {
                     <Route path="/upload" element={<UploadResume />} />
                     <Route path="/score" element={<ResumeScore />} />
                     <Route path="/jobs" element={<Jobs />} />
+                    <Route path="/jobs/:id" element={<JobDetail />} />
                 </Route>
             </Route>
 

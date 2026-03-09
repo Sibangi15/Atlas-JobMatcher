@@ -1,49 +1,61 @@
+import { useEffect, useState } from "react";
+import API from "../api/axios";
+
+import StatsCards from "../components/analytics/StatsCards";
+import ScoreBreakdownChart from "../components/analytics/ScoreBreakdownChart";
+import SkillsChart from "../components/analytics/SkillsChart";
+import SkillGapChart from "../components/analytics/SkillGapChart";
+import ATSIssues from "../components/analytics/ATSIssues";
+import SuggestionsPanel from "../components/analytics/SuggestionsPanel";
+
 const Dashboard = () => {
+
+    const [resume, setResume] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchResume = async () => {
+            try {
+                const res = await API.get("/resume/getresume");
+                setResume(res.data);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchResume();
+    }, []);
+
+    if (loading) {
+        return <div className="p-10">Loading dashboard...</div>;
+    }
+    if (!resume) {
+        return <div className="p-10">No resume uploaded</div>;
+    }
+
     return (
-        <div>
-            <h1 className="text-3xl font-semibold text-gray-800 mb-8">
-                Dashboard Overview
+
+        <div className="p-6 bg-linear-to-br from-indigo-200 via-fuchsia-50 to-indigo-50 min-h-screen">
+
+            <h1 className="text-4xl font-bold mb-6 bg-linear-to-r from-pink-700 via-fuchsia-500 to-indigo-500 bg-clip-text text-transparent">
+                Dashboard
             </h1>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <StatsCards resume={resume} />
 
-                <DashboardCard
-                    title="Resume Status"
-                    value="Uploaded"
-                    accent="bg-green-100 text-green-700"
-                />
-
-                <DashboardCard
-                    title="Job Matches"
-                    value="12"
-                    accent="bg-blue-100 text-blue-700"
-                />
-
-                <DashboardCard
-                    title="ATS Score"
-                    value="82%"
-                    accent="bg-purple-100 text-purple-700"
-                />
-
+            <div className="grid lg:grid-cols-2 gap-6 mt-6">
+                <ScoreBreakdownChart resume={resume} />
+                <SkillsChart resume={resume} />
+                <SkillGapChart resume={resume} />
+                <ATSIssues resume={resume} />
             </div>
+
+            <SuggestionsPanel resume={resume} />
+
         </div>
+
     );
 };
-
-const DashboardCard = ({ title, value, accent }) => (
-    <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-lg transition-all">
-        <p className="text-sm text-gray-500">{title}</p>
-
-        <div className="mt-4 flex items-center justify-between">
-            <p className="text-2xl font-semibold text-gray-800">
-                {value}
-            </p>
-
-            <span className={`text-xs px-3 py-1 rounded-full ${accent}`}>
-                Updated
-            </span>
-        </div>
-    </div>
-);
 
 export default Dashboard;

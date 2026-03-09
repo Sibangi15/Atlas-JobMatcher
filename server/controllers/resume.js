@@ -69,53 +69,6 @@ export const suggestKeywords = async (req, res) => {
             return res.status(404).json({ success: false, message: "Resume not found" });
         }
 
-        // Build readable text from parsedData
-        //         const parsed = resume.parsedData;
-
-        //         const resumeText = `
-        // Name: ${parsed.name || ""}
-        // Email: ${parsed.email || ""}
-        // Phone: ${parsed.phone || ""}
-
-        // Summary:
-        // ${parsed.summary || ""}
-
-        // Skills:
-        // ${parsed.skills?.join(", ") || ""}
-
-        // Education:
-        // ${parsed.education?.join(", ") || ""}
-
-        // Experience:
-        // ${parsed.experience?.join(", ") || ""}
-        // `;
-
-        //         const prompt = `
-        // You are an ATS optimization expert.
-
-        // Analyze this resume:
-
-        // ${resumeText}
-
-        // Return ONLY valid JSON:
-
-        // {
-        //   "missingSkills": [],
-        //   "industryKeywords": [],
-        //   "atsImprovements": []
-        // }
-        // `;
-
-        //         const aiRaw = await generateAIResponse(prompt);
-
-        //         // Clean markdown wrapper
-        //         const cleaned = aiRaw
-        //             .replace(/```json/g, "")
-        //             .replace(/```/g, "")
-        //             .trim();
-
-        //         const parsedData = JSON.parse(cleaned);
-
         const parsed = resume.parsedData || {};
 
         const resumeText = `

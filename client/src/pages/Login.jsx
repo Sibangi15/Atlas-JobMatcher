@@ -22,11 +22,12 @@ const Login = () => {
         try {
             const res = await API.post("/auth/login", form);
 
-            const token = res.data.token;
-
+            //const token = res.data.token;
+            const { token, user } = res.data;
             localStorage.setItem("token", token);
 
-            setUser({ email: form.email });
+            localStorage.setItem("user", JSON.stringify(user));
+            setUser(user);
 
             navigate("/dashboard");
         } catch (err) {
@@ -37,16 +38,16 @@ const Login = () => {
     return (
         <div className="min-h-screen grid grid-cols-2">
             {/* Left Section */}
-            <div className="bg-black text-white flex flex-col justify-center items-center p-10">
-                <h1 className="text-4xl font-bold mb-4">Atlas</h1>
+            <div className="bg-black flex flex-col justify-center items-center p-10">
+                <h1 className="text-4xl font-bold mb-4 tracking-wide bg-linear-to-r from-yellow-200 via-amber-300 to-yellow-400 bg-clip-text text-transparent">Atlas</h1>
                 <p className="text-gray-400 text-center">
-                    Find your dream job with AI-powered resume matching.
+                    Find your dream job with your personalized AI-powered resume matching system.
                 </p>
             </div>
 
             {/* Right Section */}
             <div className="flex items-center justify-center bg-gray-50">
-                <div className="bg-white p-10 rounded-2xl shadow-xl w-96">
+                <div className="bg-linear-to-r from-yellow-200 via-amber-300 to-yellow-400 p-10 rounded-2xl shadow-xl w-96">
                     <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
