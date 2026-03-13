@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../api/axios";
 import ScoreMeter from "../components/ScoreMeter";
 import SuggestionCard from "../components/SuggestionCard";
 import HybridBreakdown from "../components/HybridBreakdown";
+import toast from "react-hot-toast";
 
 const ResumeScore = () => {
     const [jobDesc, setJobDesc] = useState("");
@@ -13,8 +14,40 @@ const ResumeScore = () => {
 
     const resumeId = localStorage.getItem("resumeId");
 
+    useEffect(() => {
+        if (!resumeId) return;
+        const fetchResume = async () => {
+            try {
+                const res = await API.get(`/resume/${resumeId}`);
+                const resume = res.data;
+
+                if (resume.finalHybridScore) {
+                    setScore(resume.finalHybridScore);
+                }
+
+                if (resume.hybridBreakdown) {
+                    setBreakdown(resume.hybridBreakdown);
+                }
+
+                if (resume.matchAnalysis) {
+                    setSuggestions(resume.matchAnalysis);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchResume();
+    }, [resumeId]);
+
     const analyzeResume = async () => {
-        if (!jobDesc) return alert("Please enter job description");
+        if (!resumeId) {
+            toast.error("Upload a resume first");
+            return;
+        }
+        if (!jobDesc) {
+            toast.error("Please enter job description");
+            return;
+        }
 
         try {
             setLoading(true);
@@ -27,16 +60,13 @@ const ResumeScore = () => {
             await API.post(`/resume/embedding-match/${resumeId}`, payload);
 
             // 2 Gemini Match
-            await API.post(`/resume/gemini-match/${resumeId}`, payload);
+            const suggestionRes = await API.post(`/resume/analyze/${resumeId}`, payload);
 
             // 3 Hybrid Score
             const hybridRes = await API.post(`/resume/hybrid-score/${resumeId}`, payload);
 
             setScore(hybridRes.data.data.finalHybridScore);
             setBreakdown(hybridRes.data.data.breakdown);
-
-            // 4 Keyword Suggestions
-            const suggestionRes = await API.post(`/resume/suggest-keywords/${resumeId}`);
             setSuggestions(suggestionRes.data.data);
 
         } catch (error) {
@@ -76,7 +106,7 @@ const ResumeScore = () => {
 
                 <div className="flex justify-end mt-4">
                     <button
-                        onClick={analyzeResume}
+                        onClick={analyzeResume} disabled={loading}
                         className="bg-linear-to-r from-emerald-600 to-cyan-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
                     >
                         {loading ? "Analyzing..." : "Analyze Resume"}

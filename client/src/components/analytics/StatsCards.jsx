@@ -10,7 +10,7 @@ const StatsCards = ({ resume }) => {
         },
         {
             title: "Missing Skills",
-            value: resume.suggestions.missingSkills.length,
+            value: resume.matchAnalysis.missingSkills.length,
             icon: <AlertTriangle size={20} />
         },
         {

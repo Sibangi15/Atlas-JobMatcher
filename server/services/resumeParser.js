@@ -1,5 +1,3 @@
-import nlp from "compromise";
-
 export const basicParse = (text) => {
 
     const result = {
@@ -36,9 +34,9 @@ export const basicParse = (text) => {
     // SKILLS DETECTION (GLOBAL SEARCH)
     const skillDictionary = [
         "javascript", "typescript", "react", "node", "nodejs", "express",
-        "mongodb", "mysql", "postgresql", "html", "css", "tailwind",
-        "python", "java", "c++", "c#", "git", "github",
-        "aws", "docker", "kubernetes", "redux", "nextjs"
+        "mongodb", "mysql", "postgresql", "html", "css", "tailwind", "n8n", "AI", "Automation",
+        "python", "java", "c++", "c#", "git", "github", "Docker", "AWS", "API", "REST", "GraphQL",
+        "aws", "docker", "kubernetes", "redux", "nextjs", "js", "django", "sql"
     ];
 
     result.skills = skillDictionary.filter(skill =>

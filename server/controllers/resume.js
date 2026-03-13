@@ -50,7 +50,7 @@ export const uploadResume = async (req, res) => {
 
 export const getResume = async (req, res) => {
     try {
-        const resume = await Resume.findOne({ user: req.user.id });
+        const resume = await Resume.findById(req.params.id);
         if (!resume) {
             return res.status(404).json({ message: "No resume found" });
         }
@@ -60,54 +60,85 @@ export const getResume = async (req, res) => {
     }
 };
 
-
-export const suggestKeywords = async (req, res) => {
+export const getUserResumes = async (req, res) => {
     try {
+        const resumes = await Resume.find({ user: req.user.id });
+        res.json({
+            success: true,
+            data: resumes
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch resumes"
+        });
+    }
+};
+
+export const analyzeResumeWithJob = async (req, res) => {
+    try {
+        const { jobDescription } = req.body;
+
+        if (!jobDescription) {
+            return res.status(400).json({
+                success: false,
+                message: "Job description is required",
+            });
+        }
+
         const resume = await Resume.findById(req.params.id);
 
         if (!resume) {
-            return res.status(404).json({ success: false, message: "Resume not found" });
+            return res.status(404).json({
+                success: false,
+                message: "Resume not found",
+            });
         }
 
         const parsed = resume.parsedData || {};
 
         const resumeText = `
 Name: ${parsed.name || ""}
-Email: ${parsed.email || ""}
-Phone: ${parsed.phone || ""}
+Summary: ${parsed.summary || ""}
 
-Summary:
-${parsed.summary || ""}
-
-Skills:
-${parsed.skills?.join(", ") || ""}
-
-Education:
-${parsed.education?.join(", ") || ""}
-
-Experience:
-${parsed.experience?.join(", ") || ""}
+Skills: ${parsed.skills?.join(", ") || ""}
+Education: ${parsed.education?.join(", ") || ""}
+Experience: ${parsed.experience?.join(", ") || ""}
 `;
 
         const prompt = `
-You are an ATS optimization expert.
+You are an ATS system and senior technical recruiter.
 
-Analyze this resume:
+Compare the RESUME with the JOB DESCRIPTION and analyze ATS optimization.
 
+RESUME:
 ${resumeText}
+
+JOB DESCRIPTION:
+${jobDescription}
 
 Return ONLY valid JSON:
 
 {
+  "score": number,
+  "matchingSkills": [],
   "missingSkills": [],
   "industryKeywords": [],
-  "atsImprovements": []
+  "improvementSuggestions": [],
+  "atsIssues": []
 }
+
+Rules:
+- score must be between 0 and 100
+- missingSkills should be skills required in job but missing in resume
+- industryKeywords are important keywords to add
+- improvementSuggestions should improve resume quality
+- atsIssues should mention ATS formatting problems
 `;
 
         const aiRaw = await generateAIResponse(prompt);
 
-        let cleaned = aiRaw
+        const cleaned = aiRaw
             .replace(/```json/g, "")
             .replace(/```/g, "")
             .trim();
@@ -118,25 +149,33 @@ Return ONLY valid JSON:
             throw new Error("Invalid AI response format");
         }
 
-        const parsedData = JSON.parse(jsonMatch[0]);
+        const aiParsed = JSON.parse(jsonMatch[0]);
 
-        // Save to DB
-        resume.suggestions = parsedData;
-        resume.aiLastUpdated = new Date();
+        // Save analysis
+        resume.matchAnalysis = {
+            jobDescription,
+            score: aiParsed.score,
+            matchingSkills: aiParsed.matchingSkills,
+            missingSkills: aiParsed.missingSkills,
+            industryKeywords: aiParsed.industryKeywords,
+            improvementSuggestions: aiParsed.improvementSuggestions,
+            atsIssues: aiParsed.atsIssues,
+            analyzedAt: new Date(),
+        };
 
         await resume.save();
 
         res.json({
             success: true,
-            data: parsedData,
+            data: resume.matchAnalysis,
         });
 
     } catch (error) {
-        console.error("Keyword Engine Error:", error);
+        console.error("AI Analysis Error:", error);
 
         res.status(500).json({
             success: false,
-            message: "AI keyword suggestion failed",
+            message: "AI resume analysis failed",
         });
     }
 };

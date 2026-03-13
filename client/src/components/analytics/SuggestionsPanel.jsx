@@ -1,5 +1,5 @@
 const SuggestionsPanel = ({ resume }) => {
-    const suggestions = resume.suggestions.atsImprovements;
+    const suggestions = resume.matchAnalysis.improvementSuggestions;
 
     return (
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../api/axios";
 import ResumePreview from "../components/ResumePreview";
 
@@ -6,6 +6,21 @@ const UploadResume = () => {
     const [file, setFile] = useState(null);
     const [parsedData, setParsedData] = useState(null);
     const [loading, setLoading] = useState(false);
+    const resumeId = localStorage.getItem("resumeId");
+
+    useEffect(() => {
+        const fetchResume = async () => {
+            if (!resumeId) return;
+            try {
+                const res = await API.get(`/resume/${resumeId}`);
+                setParsedData(res.data.parsedData);
+            } catch (err) {
+                localStorage.removeItem("resumeId");
+                console.error(err);
+            }
+        };
+        fetchResume();
+    }, [resumeId]);
 
     const handleDrop = (e) => {
         e.preventDefault();
@@ -20,9 +35,7 @@ const UploadResume = () => {
 
         try {
             setLoading(true);
-
             const token = localStorage.getItem("token");
-
             const res = await API.post("/resume/upload", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",

@@ -1,5 +1,6 @@
 import Resume from "../models/Resume.js";
 import { generateEmbedding, cosineSimilarity } from "../services/embedding.js";
+import crypto from "crypto";
 
 export const embeddingMatch = async (req, res) => {
     try {
@@ -37,6 +38,8 @@ Experience: ${parsed.experience?.join(", ") || ""}
 Summary: ${parsed.summary || ""}
 `;
 
+        let updated = false;
+
         // Resume embedding (cached)
         let resumeEmbedding = resume.resumeEmbedding;
 
@@ -44,23 +47,40 @@ Summary: ${parsed.summary || ""}
             console.log("Generating new resume embedding...");
             resumeEmbedding = await generateEmbedding(resumeText);
             resume.resumeEmbedding = resumeEmbedding;
+            updated = true;
         } else {
             console.log("Using cached resume embedding");
         }
 
-        // Job embedding (always new)
-        const jobEmbedding = await generateEmbedding(jobDescription);
-        resume.jobEmbedding = jobEmbedding;
+        // Job embedding
+        const jobHash = crypto
+            .createHash("md5")
+            .update(jobDescription)
+            .digest("hex");
+
+        if (!resume.jobEmbeddings) {
+            resume.jobEmbeddings = {};
+        }
+
+        let jobEmbedding;
+
+        if (resume.jobEmbeddings?.[jobHash]) {
+            console.log("Using cached job embedding");
+            jobEmbedding = resume.jobEmbeddings[jobHash];
+        } else {
+            console.log("Generating new job embedding");
+            jobEmbedding = await generateEmbedding(jobDescription);
+            resume.jobEmbeddings[jobHash] = jobEmbedding;
+            updated = true;
+        }
 
         // Similarity
         const similarity = cosineSimilarity(resumeEmbedding, jobEmbedding);
-
         const embeddingScore = Number((similarity * 100).toFixed(2));
-
         resume.similarityScore = embeddingScore;
-
-        await resume.save();
-
+        if (updated) {
+            await resume.save();
+        }
         res.json({
             success: true,
             similarityScore: embeddingScore,

@@ -10,12 +10,12 @@ const SkillsChart = ({ resume }) => {
 
     const data = [
         {
-            name: "Existing Skills",
-            value: resume.parsedData.skills.length
+            name: "Matching Skills",
+            value: resume.matchAnalysis.matchingSkills.length
         },
         {
             name: "Missing Skills",
-            value: resume.suggestions.missingSkills.length
+            value: resume.matchAnalysis.missingSkills.length
         }
     ];
 

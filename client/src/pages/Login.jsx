@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Login = () => {
 
             localStorage.setItem("user", JSON.stringify(user));
             setUser(user);
-
+            toast.success("Login successful");
             navigate("/dashboard");
         } catch (err) {
             alert("Invalid credentials");

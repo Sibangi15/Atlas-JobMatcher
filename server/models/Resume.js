@@ -33,15 +33,12 @@ const ResumeSchema = new Schema({
         type: Date,
         default: Date.now,
     },
-    suggestions: {
-        missingSkills: [String],
-        industryKeywords: [String],
-        atsImprovements: [String],
-    },
     matchAnalysis: {
         jobDescription: String,
         score: Number,
+        matchingSkills: [String],
         missingSkills: [String],
+        industryKeywords: [String],
         improvementSuggestions: [String],
         atsIssues: [String],
         analyzedAt: Date,

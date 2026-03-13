@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../api/axios";
 import JobCard from "../components/JobCard";
+import toast from "react-hot-toast";
 
 const Jobs = () => {
 
@@ -8,6 +9,7 @@ const Jobs = () => {
     const [matches, setMatches] = useState({});
     const [location, setLocation] = useState("");
     const [loading, setLoading] = useState(false);
+    const resumeId = localStorage.getItem("resumeId");
 
     useEffect(() => {
         fetchJobs();
@@ -30,10 +32,8 @@ const Jobs = () => {
     const scrapeJobs = async () => {
         setLoading(true);
         try {
-
             await API.get("/job/scrape-test");
             await fetchJobs();
-
         } catch (err) {
             console.error(err);
         }
@@ -50,8 +50,6 @@ const Jobs = () => {
                 matchMap[m.jobId] = m.score;
             });
 
-            setMatches(matchMap);
-
             // SORT JOBS BY SCORE (DESCENDING)
             const sortedJobs = [...jobs].sort((a, b) => {
                 const scoreA = matchMap[a._id] || 0;
@@ -59,10 +57,11 @@ const Jobs = () => {
                 return scoreB - scoreA;
             });
 
+            setMatches(matchMap);
             setJobs(sortedJobs);
 
         } catch (err) {
-            console.error(err);
+            toast.error(err.response?.data?.message || "Something went wrong");
         }
     };
 
@@ -80,7 +79,7 @@ const Jobs = () => {
                 <div className="flex gap-3">
 
                     <button
-                        onClick={scrapeJobs}
+                        onClick={scrapeJobs} disabled={loading}
                         className="bg-linear-to-r from-indigo-600 to-blue-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
                     >
                         {loading ? "Scraping..." : "Scrape Latest Jobs"}
@@ -88,16 +87,26 @@ const Jobs = () => {
 
                     <button
                         onClick={matchAllJobs}
-                        className="bg-linear-to-r from-emerald-600 to-green-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
+                        disabled={!resumeId}
+                        className={`px-5 py-2 rounded-lg shadow-md transition text-white
+    ${resumeId
+                                ? "bg-linear-to-r from-emerald-600 to-green-500 hover:opacity-90"
+                                : "bg-gray-400 cursor-not-allowed"
+                            }`}
                     >
                         Check Resume Match
                     </button>
 
                 </div>
 
+
             </div>
 
-
+            {!resumeId && (
+                <p className="text-sm text-red-500 mt-2">
+                    Upload a resume to enable job matching.
+                </p>
+            )}
             {/* Filter Bar */}
 
             <div className="bg-linear-to-r from-indigo-50 to-blue-50 border border-indigo-100 rounded-xl p-4 flex flex-col md:flex-row gap-3 mb-8 shadow-sm">
@@ -133,6 +142,11 @@ const Jobs = () => {
                 ))}
 
             </div>
+            {jobs.length === 0 && (
+                <div className="text-center text-gray-500 py-10">
+                    No jobs found. Try scraping the latest jobs.
+                </div>
+            )}
 
         </div>
     );

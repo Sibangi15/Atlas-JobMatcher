@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 const JobCard = ({ job, score }) => {
-
+    const getMatchColor = (score) => {
+        if (score >= 80) return "bg-emerald-100 text-emerald-700";
+        if (score >= 50) return "bg-yellow-100 text-yellow-700";
+        return "bg-red-100 text-red-700";
+    };
     return (
 
         <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6 flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition duration-200">
@@ -31,7 +35,7 @@ const JobCard = ({ job, score }) => {
                         Resume Match
                     </div>
 
-                    <div className="bg-linear-to-r from-emerald-500 to-green-400 text-white font-semibold px-3 py-1 rounded-full text-sm shadow-sm">
+                    <div className={`${getMatchColor(score)} font-semibold px-3 py-1 rounded-full text-sm shadow-sm`}>
                         {score.toFixed(1)}%
                     </div>
 
