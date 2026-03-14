@@ -8,7 +8,7 @@ const DashboardLayout = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
-        <div className="flex bg-gray-50 min-h-screen relative">
+        <div className="flex bg-gray-50 min-h-screen w-full overflow-hidden relative">
 
             <Sidebar
                 collapsed={collapsed}
@@ -17,15 +17,20 @@ const DashboardLayout = () => {
                 setMobileOpen={setMobileOpen}
             />
 
-            <div className="flex flex-col flex-1">
+            {/* Main Content Area */}
+            <div
+                className={`flex flex-col flex-1 min-w-0 ${collapsed ? "md:ml-20" : "md:ml-64"
+                    }`}
+            >
 
                 <Navbar setMobileOpen={setMobileOpen} />
 
-                <main className="p-6 md:p-8">
+                <main className="flex-1 p-6 md:p-8 overflow-y-auto">
                     <Outlet />
                 </main>
 
             </div>
+
         </div>
     );
 };

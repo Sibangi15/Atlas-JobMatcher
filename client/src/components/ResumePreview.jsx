@@ -11,15 +11,15 @@ const ResumePreview = ({ data }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <p className="text-sm font-semibold text-gray-600">Full Name</p>
-                    <p className="text-2xl text-gray-800">{data.name}</p>
+                    <p className="text-base sm:text-xl lg:text-2xl text-gray-800 break-all">{data.name}</p>
                 </div>
                 <div>
                     <p className="text-sm font-semibold text-gray-600">Email Address</p>
-                    <p className="text-2xl text-gray-800">{data.email}</p>
+                    <p className="text-base sm:text-xl lg:text-2xl text-gray-800 break-all">{data.email}</p>
                 </div>
                 <div>
                     <p className="text-sm font-semibold text-gray-600">Experience Summary</p>
-                    <p className="text-2xl text-gray-800">{data.experience}</p>
+                    <p className="text-base sm:text-xl lg:text-2xl text-gray-800 break-all">{data.experience}</p>
                 </div>
             </div>
 

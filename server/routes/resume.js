@@ -10,8 +10,8 @@ import { hybridMatch } from '../controllers/hybridScrore.js';
 router.post('/upload', fetchuser, upload.single("resume"), uploadResume);
 router.get('/my-resumes', fetchuser, getUserResumes);
 router.get('/:id', getResume);
-router.post("/embedding-match/:id", embeddingMatch);
-router.post("/hybrid-score/:id", hybridMatch);
+router.post("/embedding-match/:id", embeddingMatch); //future use
+router.post("/hybrid-score/:id", hybridMatch); //future use
 router.post("/analyze/:id", analyzeResumeWithJob); //important
 
 export default router;

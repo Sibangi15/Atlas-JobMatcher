@@ -2,7 +2,7 @@ import Resume from '../models/Resume.js';
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 import fs from "fs";
 import { basicParse } from "../services/resumeParser.js";
-import { generateAIResponse } from "../services/aiParser.js";
+import { runAnalysisPipeline } from '../services/analysisPipeline.js';
 
 export const uploadResume = async (req, res) => {
     try {
@@ -77,6 +77,7 @@ export const getUserResumes = async (req, res) => {
 
 export const analyzeResumeWithJob = async (req, res) => {
     try {
+
         const { jobDescription } = req.body;
 
         if (!jobDescription) {
@@ -86,96 +87,27 @@ export const analyzeResumeWithJob = async (req, res) => {
             });
         }
 
-        const resume = await Resume.findById(req.params.id);
-
-        if (!resume) {
-            return res.status(404).json({
-                success: false,
-                message: "Resume not found",
-            });
-        }
-
-        const parsed = resume.parsedData || {};
-
-        const resumeText = `
-Name: ${parsed.name || ""}
-Summary: ${parsed.summary || ""}
-
-Skills: ${parsed.skills?.join(", ") || ""}
-Education: ${parsed.education?.join(", ") || ""}
-Experience: ${parsed.experience?.join(", ") || ""}
-`;
-
-        const prompt = `
-You are an ATS system and senior technical recruiter.
-
-Compare the RESUME with the JOB DESCRIPTION and analyze ATS optimization.
-
-RESUME:
-${resumeText}
-
-JOB DESCRIPTION:
-${jobDescription}
-
-Return ONLY valid JSON:
-
-{
-  "score": number,
-  "matchingSkills": [],
-  "missingSkills": [],
-  "industryKeywords": [],
-  "improvementSuggestions": [],
-  "atsIssues": []
-}
-
-Rules:
-- score must be between 0 and 100
-- missingSkills should be skills required in job but missing in resume
-- industryKeywords are important keywords to add
-- improvementSuggestions should improve resume quality
-- atsIssues should mention ATS formatting problems
-`;
-
-        const aiRaw = await generateAIResponse(prompt);
-
-        const cleaned = aiRaw
-            .replace(/```json/g, "")
-            .replace(/```/g, "")
-            .trim();
-
-        const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-
-        if (!jsonMatch) {
-            throw new Error("Invalid AI response format");
-        }
-
-        const aiParsed = JSON.parse(jsonMatch[0]);
-
-        // Save analysis
-        resume.matchAnalysis = {
-            jobDescription,
-            score: aiParsed.score,
-            matchingSkills: aiParsed.matchingSkills,
-            missingSkills: aiParsed.missingSkills,
-            industryKeywords: aiParsed.industryKeywords,
-            improvementSuggestions: aiParsed.improvementSuggestions,
-            atsIssues: aiParsed.atsIssues,
-            analyzedAt: new Date(),
-        };
-
-        await resume.save();
+        const result = await runAnalysisPipeline(
+            req.params.id,
+            jobDescription
+        );
 
         res.json({
             success: true,
-            data: resume.matchAnalysis,
+            data: {
+                finalHybridScore: result.finalHybridScore,
+                breakdown: result.hybridBreakdown,
+                matchAnalysis: result.matchAnalysis,
+                similarityScore: result.similarityScore
+            }
         });
 
     } catch (error) {
-        console.error("AI Analysis Error:", error);
+        console.error("Full Analysis Error:", error);
 
         res.status(500).json({
             success: false,
-            message: "AI resume analysis failed",
+            message: "Full analysis failed",
         });
     }
 };

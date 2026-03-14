@@ -1,6 +1,13 @@
-export const calculateMatchScore = (resumeSkills, jobSkills) => {
-    if (!resumeSkills?.length || !jobSkills?.length) return 0;
+export const calculateMatchScore = (resumeSkills = [], jobSkills = []) => {
 
+    if (!resumeSkills.length || !jobSkills.length) {
+        return {
+            score: 0,
+            matchingSkills: [],
+            missingSkills: [],
+            totalJobSkills: 0
+        };
+    }
     // Normalize skills (lowercase, trim)
     const normalizedResumeSkills = resumeSkills.map(skill =>
         skill.toLowerCase().trim()
@@ -9,22 +16,27 @@ export const calculateMatchScore = (resumeSkills, jobSkills) => {
     const normalizedJobSkills = jobSkills.map(skill =>
         skill.toLowerCase().trim()
     );
-
     // Find matching skills
-    const matchingSkills = normalizedJobSkills.filter(skill =>
-        normalizedResumeSkills.includes(skill)
-    );
+    const matchingSkills = [...new Set(
+        normalizedJobSkills.filter(jobSkill =>
+            normalizedResumeSkills.some(resumeSkill =>
+                resumeSkill.includes(jobSkill) || jobSkill.includes(resumeSkill)
+            )
+        )
+    )];
+
     const missingSkills = normalizedJobSkills.filter(
-        skill => !normalizedResumeSkills.includes(skill)
+        skill => !matchingSkills.includes(skill)
     );
 
-    const score =
-        (matchingSkills.length / normalizedJobSkills.length) * 100;
+    const score = Math.round(
+        (matchingSkills.length / normalizedJobSkills.length) * 100
+    );
 
     return {
-        score: Math.round(score),
+        score,
         matchingSkills,
-        totalJobSkills: normalizedJobSkills.length,
         missingSkills,
+        totalJobSkills: normalizedJobSkills.length
     };
 };

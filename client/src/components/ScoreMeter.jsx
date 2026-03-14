@@ -15,7 +15,7 @@ const ScoreMeter = ({ score }) => {
     };
 
     return (
-        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-8 flex flex-col items-center">
+        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-4 sm:p-8 flex flex-col items-center">
 
             <h2 className="text-lg font-semibold text-gray-700 mb-6">
                 ATS Compatibility Score

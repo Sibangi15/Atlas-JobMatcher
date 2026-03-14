@@ -47,7 +47,7 @@ const Dashboard = () => {
 
     return (
 
-        <div className="p-8 bg-linear-to-br from-slate-50 via-purple-50 to-fuchsia-50 min-h-screen">
+        <div className="bg-linear-to-br from-slate-50 via-purple-50 to-fuchsia-50 min-h-screen">
 
             <h1 className="text-4xl font-bold mb-8 bg-linear-to-r from-pink-700 via-fuchsia-500 to-indigo-500 bg-clip-text text-transparent">
                 Dashboard
@@ -59,7 +59,7 @@ const Dashboard = () => {
                     Select Resume
                 </p>
 
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {resumes.map((r) => (
                         <button
                             key={r._id}
@@ -75,7 +75,7 @@ const Dashboard = () => {
                                 📄
                             </span>
 
-                            <span className="text-sm font-medium truncate">
+                            <span className="text-sm font-medium truncate max-w-45">
                                 {r.filename}
                             </span>
 
@@ -90,7 +90,7 @@ const Dashboard = () => {
                 <>
                     <StatsCards resume={selectedResume} />
 
-                    <div className="grid lg:grid-cols-2 gap-8 mt-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
                         <ScoreBreakdownChart resume={selectedResume} />
                         <SkillsChart resume={selectedResume} />
                         <SkillGapChart resume={selectedResume} />

@@ -11,7 +11,7 @@ const JobCard = ({ job, score }) => {
 
             <div>
 
-                <Link to={`/jobs/${job._id}`}>
+                <Link to={`/jobs/${job._id}`} state={{ matchScore: score }}>
                     <h2 className="text-lg font-semibold text-gray-800 mb-1">
                         {job.title}
                     </h2>

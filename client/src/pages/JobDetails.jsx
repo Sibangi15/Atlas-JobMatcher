@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import API from "../api/axios";
 import toast from "react-hot-toast";
 
@@ -12,6 +12,25 @@ const JobDetail = () => {
     const [loading, setLoading] = useState(false);
 
     const resumeId = localStorage.getItem("resumeId");
+
+    const location = useLocation();
+    const matchScore = location.state?.matchScore;
+
+    const finalScore = analysis?.finalHybridScore ?? matchScore;
+
+    const scoreColor =
+        finalScore >= 75
+            ? "text-emerald-600"
+            : finalScore >= 50
+                ? "text-amber-500"
+                : "text-red-500";
+
+    const scoreBg =
+        finalScore >= 75
+            ? "bg-emerald-50 border-emerald-200"
+            : finalScore >= 50
+                ? "bg-amber-50 border-amber-200"
+                : "bg-red-50 border-red-200";
 
     useEffect(() => {
         fetchJob();
@@ -70,24 +89,44 @@ const JobDetail = () => {
 
             <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6 mb-6">
 
-                <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-                    {job.title}
-                </h1>
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                <p className="text-gray-500 mt-2">
-                    {job.company} • {job.location}
-                </p>
+                    {/* Job Title Section */}
+                    <div className="text-center md:text-left">
+                        <h1 className="text-3xl font-bold bg-linear-to-r from-indigo-600 via-purple-500 to-blue-500 bg-clip-text text-transparent">
+                            {job.title}
+                        </h1>
 
-                <button
-                    onClick={analyzeMatch}
-                    disabled={loading}
-                    className="mt-4 bg-linear-to-r from-indigo-600 via-purple-500 to-blue-500 text-white px-6 py-2.5 rounded-lg shadow-md hover:scale-[1.02] transition cursor-pointer"
-                >
-                    {loading ? "Analyzing..." : "Analyze Resume Match"}
-                </button>
+                        <p className="text-gray-500 mt-2">
+                            {job.company} • {job.location}
+                        </p>
+                    </div>
+
+                    {/* Score */}
+                    {finalScore !== undefined && (
+                        <div className={`mx-auto md:mx-0 px-4 py-2 rounded-xl shadow-sm border ${scoreBg}`}>
+                            <p className="text-xs text-gray-500 text-center">ATS Score</p>
+
+                            <p className={`text-lg font-bold text-center ${scoreColor}`}>
+                                {Math.round(finalScore)}%
+                            </p>
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Analyze Button */}
+                <div className="flex justify-center md:justify-start">
+                    <button
+                        onClick={analyzeMatch}
+                        disabled={loading}
+                        className="mt-4 bg-linear-to-r from-indigo-600 via-purple-500 to-blue-500 text-white px-6 py-2.5 rounded-lg shadow-md hover:scale-[1.02] transition cursor-pointer"
+                    >
+                        {loading ? "Analyzing..." : "Analyze Resume Match"}
+                    </button>
+                </div>
 
             </div>
-
 
             {/* AI Analysis */}
 
@@ -111,7 +150,7 @@ const JobDetail = () => {
                             </h3>
 
                             <div className="flex flex-wrap gap-2">
-                                {analysis.matchingSkills?.map(skill => (
+                                {analysis.matchAnalysis?.matchingSkills?.map(skill => (
                                     <span
                                         key={skill}
                                         className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs border border-emerald-200"
@@ -131,7 +170,7 @@ const JobDetail = () => {
                             </h3>
 
                             <div className="flex flex-wrap gap-2">
-                                {analysis.missingSkills?.map(skill => (
+                                {analysis.matchAnalysis?.missingSkills?.map(skill => (
                                     <span
                                         key={skill}
                                         className="bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-xs border border-red-200"
@@ -151,7 +190,7 @@ const JobDetail = () => {
                             </h3>
 
                             <div className="flex flex-wrap gap-2">
-                                {analysis.industryKeywords?.map(skill => (
+                                {analysis.matchAnalysis?.industryKeywords?.map(skill => (
                                     <span
                                         key={skill}
                                         className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full text-xs border border-blue-200"
@@ -175,7 +214,7 @@ const JobDetail = () => {
                             </h3>
 
                             <ul className="space-y-1 text-gray-700 text-sm">
-                                {analysis.improvementSuggestions?.map((tip, i) => (
+                                {analysis.matchAnalysis?.improvementSuggestions?.map((tip, i) => (
                                     <li key={i} className="flex gap-2 items-start">
                                         <span className="text-cyan-500 font-bold">✓</span>
                                         <span>{tip}</span>
@@ -193,7 +232,7 @@ const JobDetail = () => {
                             </h3>
 
                             <ul className="space-y-1 text-gray-700 text-sm">
-                                {analysis.atsIssues?.map((tip, i) => (
+                                {analysis.matchAnalysis?.atsIssues?.map((tip, i) => (
                                     <li key={i} className="flex gap-2 items-start">
                                         <span className="text-pink-500 font-bold">•</span>
                                         <span>{tip}</span>

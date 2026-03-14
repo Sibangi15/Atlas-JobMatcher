@@ -1,13 +1,13 @@
 const SuggestionCard = ({ suggestions }) => {
     if (!suggestions) return null;
     return (
-        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-8">
+        <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-4 sm:p-8 w-full">
 
             <h2 className="text-xl font-bold text-amber-950 mb-8">
                 Resume Improvement Suggestions
             </h2>
 
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
 
                 {/* Matching Skills */}
                 <div className="border border-green-100 bg-green-50/40 rounded-xl p-5">
@@ -67,7 +67,7 @@ const SuggestionCard = ({ suggestions }) => {
                 </div>
 
             </div>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
 
                 <div className="border border-lime-100 bg-lime-50/40 rounded-xl p-5">
                     <h3 className="font-semibold text-lime-600 mb-4">
@@ -78,7 +78,7 @@ const SuggestionCard = ({ suggestions }) => {
                         {suggestions.improvementSuggestions?.map((tip, i) => (
                             <li key={i} className="flex gap-3 items-start">
                                 <span className="text-lime-500 font-bold">✓</span>
-                                <span>{tip}</span>
+                                <span className="wrap-break-words">{tip}</span>
                             </li>
                         ))}
                     </ul>
@@ -94,7 +94,7 @@ const SuggestionCard = ({ suggestions }) => {
                         {suggestions.atsIssues?.map((tip, i) => (
                             <li key={i} className="flex gap-3 items-start">
                                 <span className="text-red-500 font-bold">•</span>
-                                <span>{tip}</span>
+                                <span className="wrap-break-words">{tip}</span>
                             </li>
                         ))}
                     </ul>

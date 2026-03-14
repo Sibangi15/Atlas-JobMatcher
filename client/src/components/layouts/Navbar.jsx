@@ -9,35 +9,48 @@ const Navbar = ({ setMobileOpen }) => {
         if (storedUser?.name) {
             setUserName(storedUser.name);
         }
-        
     }, []);
-const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.replace("/");
-};
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        window.location.replace("/");
+    };
 
     return (
-        <div className="w-full bg-linear-to-r from-yellow-100 via-amber-200 to-yellow-400 border-purple-100 px-6 py-4 flex justify-between items-center">
+        <div className="w-full bg-linear-to-r from-yellow-100 via-amber-200 to-yellow-400 border-b border-purple-100">
 
-            <div className="flex items-center gap-4">
-                <button onClick={() => setMobileOpen(true)} className="md:hidden text-gray-600">
-                    <Menu />
-                </button>
+            <div className="w-full px-4 py-3 flex items-center justify-between">
 
-                <h2 className="text-lg font-medium text-gray-700">
-                    Welcome back,{" "}
-                    <span className="font-semibold bg-linear-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">
-                        {userName}
-                    </span>
-                </h2>
-            </div>
+                {/* LEFT SECTION */}
+                <div className="flex items-center gap-3 min-w-0">
 
-            <div className="flex justify-end">
-                <button onClick={handleLogout} className="bg-black text-white px-4 py-2 rounded-lg shadow-md transition cursor-pointer">
+                    <button
+                        onClick={() => setMobileOpen(true)}
+                        className="md:hidden text-gray-700 shrink-0"
+                    >
+                        <Menu />
+                    </button>
+
+                    <p className="text-sm sm:text-base text-gray-700 truncate">
+                        Welcome back{" "}
+                        <span className="font-semibold bg-linear-to-r from-fuchsia-600 to-indigo-600 bg-clip-text text-transparent">
+                            {userName}
+                        </span>
+                    </p>
+
+                </div>
+
+                {/* RIGHT SECTION */}
+                <button
+                    onClick={handleLogout}
+                    className="shrink-0 bg-black text-white px-3 sm:px-4 py-2 rounded-lg shadow-md hover:bg-gray-800 transition text-sm sm:text-base"
+                >
                     Logout
                 </button>
+
             </div>
+
         </div>
     );
 };

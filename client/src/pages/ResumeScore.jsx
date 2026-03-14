@@ -56,18 +56,11 @@ const ResumeScore = () => {
                 jobDescription: jobDesc
             };
 
-            // 1 Embedding Match
-            await API.post(`/resume/embedding-match/${resumeId}`, payload);
+            const res = await API.post(`/resume/analyze/${resumeId}`, payload);
 
-            // 2 Gemini Match
-            const suggestionRes = await API.post(`/resume/analyze/${resumeId}`, payload);
-
-            // 3 Hybrid Score
-            const hybridRes = await API.post(`/resume/hybrid-score/${resumeId}`, payload);
-
-            setScore(hybridRes.data.data.finalHybridScore);
-            setBreakdown(hybridRes.data.data.breakdown);
-            setSuggestions(suggestionRes.data.data);
+            setScore(res.data.data.finalHybridScore);
+            setBreakdown(res.data.data.breakdown);
+            setSuggestions(res.data.data.matchAnalysis);
 
         } catch (error) {
             console.error(error);
@@ -77,59 +70,72 @@ const ResumeScore = () => {
         }
     };
     return (
-        <div className="max-w-6xl mx-auto space-y-10">
+        <div className="w-full p-4 md:p-6">
+            <div className="w-full max-w-6xl mx-auto space-y-8 px-1 sm:px-0">
 
-            {/* Header */}
-            <div>
-                <h1 className="text-3xl font-semibold bg-linear-to-r from-emerald-600 to-cyan-500 bg-clip-text text-transparent">
-                    Resume vs Job Analysis
-                </h1>
-                <p className="text-gray-500 mt-1">
-                    Compare your resume against a job description using AI.
-                </p>
-            </div>
+                {/* Header */}
+                <div>
+                    <h1 className="text-3xl font-semibold bg-linear-to-r from-emerald-600 to-cyan-500 bg-clip-text text-transparent">
+                        Resume vs Job Analysis
+                    </h1>
+                    <p className="text-gray-500 mt-1">
+                        Compare your resume against a job description using AI.
+                    </p>
+                </div>
 
-            {/* Job Description Input */}
-            <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
+                {/* Job Description Input */}
+                <div className="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
 
-                <h2 className="font-semibold text-gray-800 mb-4">
-                    Job Description
-                </h2>
+                    <h2 className="font-semibold text-gray-800 mb-4">
+                        Job Description
+                    </h2>
 
-                <textarea
-                    value={jobDesc}
-                    onChange={(e) => setJobDesc(e.target.value)}
-                    placeholder="Paste the job description here..."
-                    className="w-full h-44 p-4 border border-gray-200 rounded-xl 
+                    <textarea
+                        value={jobDesc}
+                        onChange={(e) => setJobDesc(e.target.value)}
+                        placeholder="Paste the job description here..."
+                        className="w-full h-44 p-4 border border-gray-200 rounded-xl 
         focus:ring-2 focus:ring-black focus:border-transparent resize-none"
-                />
+                    />
 
-                <div className="flex justify-end mt-4">
-                    <button
-                        onClick={analyzeResume} disabled={loading}
-                        className="bg-linear-to-r from-emerald-600 to-cyan-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
-                    >
-                        {loading ? "Analyzing..." : "Analyze Resume"}
-                    </button>
+                    <div className="flex justify-end mt-4">
+                        <button
+                            onClick={analyzeResume} disabled={loading}
+                            className="bg-linear-to-r from-emerald-600 to-cyan-500 hover:opacity-90 text-white px-5 py-2 rounded-lg shadow-md transition cursor-pointer"
+                        >
+                            {loading ? "Analyzing..." : "Analyze Resume"}
+                        </button>
+                    </div>
+
                 </div>
+
+                {/* Results */}
+                {/* Results */}
+                {(score !== null || breakdown || suggestions) && (
+                    <div className="grid md:grid-cols-2 gap-6 w-full">
+
+                        {score !== null && (
+                            <div className="min-w-0">
+                                <ScoreMeter score={score} />
+                            </div>
+                        )}
+
+                        {breakdown && (
+                            <div className="min-w-0">
+                                <HybridBreakdown breakdown={breakdown} />
+                            </div>
+                        )}
+
+                        {suggestions && (
+                            <div className="md:col-span-2 min-w-0">
+                                <SuggestionCard suggestions={suggestions} />
+                            </div>
+                        )}
+
+                    </div>
+                )}
 
             </div>
-
-            {/* Results */}
-            {(score !== null || breakdown || suggestions) && (
-                <div className="grid lg:grid-cols-2 gap-6">
-
-                    {score !== null && <ScoreMeter score={score} />}
-                    {breakdown && <HybridBreakdown breakdown={breakdown} />}
-                    {suggestions && (
-                        <div className="lg:col-span-3">
-                            <SuggestionCard suggestions={suggestions} />
-                        </div>
-                    )}
-
-                </div>
-            )}
-
         </div>
     );
 };

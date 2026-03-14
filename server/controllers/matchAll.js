@@ -10,7 +10,7 @@ export const matchResumeWithAllJobs = async (req, res) => {
         });
     }
     const resume = await Resume.findOne({ user: req.user.id });
-    const jobs = await Job.find();
+    const jobs = await Job.find().select("title company skills");
 
     if (!resume) {
         return res.status(400).json({
