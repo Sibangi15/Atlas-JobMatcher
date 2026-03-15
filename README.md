@@ -6,6 +6,16 @@ This project helps job seekers understand how well their resume aligns with a jo
 
 ---
 
+##  Live Demo
+
+ **Frontend:** https://atlas-the-job-matcher.vercel.app  
+
+ **Backend API:**  https://atlas-backend-izvh.onrender.com
+
+Try uploading a resume and comparing it with a job description to see the ATS analysis in action.
+
+---
+
 #  Features
 
 - Upload Resume (PDF)  
