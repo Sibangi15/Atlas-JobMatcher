@@ -13,7 +13,7 @@ import "./cron/jobCron.js";
 connectToMongo();
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(express.json());
@@ -23,7 +23,7 @@ import cors from "cors";
 app.use(cors({
     origin: [
         "http://localhost:5173",
-        "https://atlas-the-job-matcher.vercel.app/"
+        "https://atlas-the-job-matcher.vercel.app"
     ],
     credentials: true
 }));
