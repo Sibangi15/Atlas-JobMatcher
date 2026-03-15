@@ -21,17 +21,12 @@ app.use(express.json());
 import cors from "cors";
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://atlas-the-job-matcher.vercel.app/"
+    ],
     credentials: true
 }));
-
-// app.use(cors({
-//   origin: [
-//     "http://localhost:5173",
-//     "https://your-frontend.vercel.app"
-//   ],
-//   credentials: true
-// }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
