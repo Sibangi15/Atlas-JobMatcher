@@ -16,12 +16,7 @@ const DashboardLayout = () => {
                 mobileOpen={mobileOpen}
                 setMobileOpen={setMobileOpen}
             />
-
-            {/* Main Content Area */}
-            <div
-                className={`flex flex-col flex-1 min-w-0 ${collapsed ? "md:ml-20" : "md:ml-64"
-                    }`}
-            >
+            <div className={`flex flex-col flex-1 min-w-0 ${collapsed ? "md:ml-20" : "md:ml-64"}`} >
 
                 <Navbar setMobileOpen={setMobileOpen} />
 

@@ -129,9 +129,8 @@ const Login = () => {
                     Atlas
                 </h1>
 
-                <p className="text-gray-400 max-w-sm">
-                    Find your dream job with your personalized AI-powered resume
-                    matching system.
+                <p className="text-gray-300 max-w-sm">
+                    Find your dream job with your personalized AI-powered resume matching system.
                 </p>
 
             </div>
