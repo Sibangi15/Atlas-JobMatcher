@@ -13,7 +13,7 @@ import "./cron/jobCron.js";
 connectToMongo();
 
 const app = express();
-const port = process.env.SERVER_PORT;
+const port = process.env.PORT;
 
 app.use(cookieParser());
 app.use(express.json());
