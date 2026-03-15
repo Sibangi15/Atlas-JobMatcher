@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-
+import fs from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 
@@ -31,6 +31,11 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/job", jobRoutes);
+
+if (!fs.existsSync("uploads")) {
+    fs.mkdirSync("uploads");
+}
+
 app.use("/uploads", express.static("uploads"));
 
 app.listen(port, () => {
